@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anurag Vishwakarma | Creative Developer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#080810',
+                            card: '#0f111a',
+                            border: '#1f2438',
+                            accent: '#00f2fe', /* Electric Cyan */
+                            purple: '#9d4edd', /* Cyber Purple */
+                            green: '#39ff14'  /* Matrix Green */
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom Neon Glows */
+        .neon-text-cyan {
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+        .neon-text-green {
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+        }
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.25);
+            border-color: rgba(157, 78, 221, 0.4);
+        }
+        
+        /* Hide default scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080810;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2438;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+
+        /* Dynamic blinking cursor */
+        .cursor-blink::after {
+            content: '█';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Custom glow background cards */
+        .glass-card {
+            background: rgba(15, 17, 26, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31, 36, 56, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-cyber-black text-gray-300 font-sans selection:bg-cyber-accent selection:text-black relative overflow-x-hidden">
+
+    <!-- Interactive Canvas Background -->
+    <canvas id="matrixCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-20"></canvas>
+
+    <!-- Top Glow Blob -->
+    <div class="fixed -top-40 -left-40 w-96 h-96 bg-cyber-accent/15 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="fixed top-1/2 right-10 w-80 h-80 bg-cyber-purple/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-card border-b border-cyber-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#hero" class="font-mono text-lg font-bold tracking-wider text-cyber-accent flex items-center gap-2">
+                <span class="text-cyber-purple">&lt;</span>ANURAG<span class="text-cyber-accent">.V</span><span class="text-cyber-purple">/&gt;</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 font-mono text-sm">
+                <a href="#about" class="hover:text-cyber-accent transition-colors flex items-center gap-1.5"><span class="text-xs text-cyber-purple">01.</span>~/about</a>
+                <a href="#skills" class="hover:text-cyber-accent transition-colors flex items-center gap-1.5"><span class="text-xs text-cyber-purple">02.</span>~/skills</a>
+                <a href="#experience" class="hover:text-cyber-accent transition-colors flex items-center gap-1.5"><span class="text-xs text-cyber-purple">03.</span>~/experience</a>
+                <a href="#projects" class="hover:text-cyber-accent transition-colors flex items-center gap-1.5"><span class="text-xs text-cyber-purple">04.</span>~/projects</a>
+                <a href="#contact" class="px-4 py-1.5 rounded border border-cyber-accent/30 text-cyber-accent hover:bg-cyber-accent/10 transition-all font-semibold">ping -c 1</a>
+            </div>
+
+            <!-- Hamburger Button -->
+            <button id="navToggle" class="md:hidden text-gray-300 hover:text-cyber-accent transition-colors focus:outline-none">
+                <i class="fa-solid fa-bars-staggered text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden glass-card border-b border-cyber-border px-6 py-4 space-y-4 font-mono text-center">
+            <a href="#about" class="block py-2 hover:text-cyber-accent">~/about</a>
+            <a href="#skills" class="block py-2 hover:text-cyber-accent">~/skills</a>
+            <a href="#experience" class="block py-2 hover:text-cyber-accent">~/experience</a>
+            <a href="#projects" class="block py-2 hover:text-cyber-accent">~/projects</a>
+            <a href="#contact" class="block py-2 text-cyber-accent font-bold">ping -c 1</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center px-6 relative z-10 pt-20">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    
+            
+            <!-- Left Info Panel -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center gap-2 bg-cyber-accent/10 border border-cyber-accent/20 px-3 py-1 rounded-full text-xs font-mono text-cyber-accent">
+                    <span class="w-2 h-2 bg-cyber-green rounded-full animate-ping"></span>
+                    Available for Opportunities
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-none">
+                    Anurag <span class="bg-gradient-to-r from-cyber-accent to-cyber-purple bg-clip-text text-transparent">Vishwakarma</span>
+                </h1>
+                
+                <!-- Terminal Vibe Dynamic Role -->
+                <p class="font-mono text-lg md:text-xl text-gray-400">
+                    $ <span class="text-white">aspiring_developer</span> = <span class="text-cyber-accent cursor-blink" id="terminalRole">Master of Computer Application (MCA)</span>
+                </p>
+
+                <p class="text-gray-400 text-lg max-w-xl leading-relaxed">
+                    Eager to associate with an organization where I can leverage my expertise in programming, Linux system setup, and responsive web systems to build modern digital pipelines.
+                </p>
+
+                <!-- Core Stats brief -->
+                
+                <div class="grid grid-cols-3 gap-4 max-w-md pt-4 font-mono text-xs">
+                     <div class="bg-cyber-card/50 border border-cyber-border p-3 rounded">
+                        <div class="text-cyber-green font-bold text-lg">1 year</div>
+                        <span class="text-gray-500">Teaching Experience</span>
+                    </div>
+                     <div class="bg-cyber-card/50 border border-cyber-border p-3 rounded">
+                        <div class="text-cyber-purple font-bold text-lg">2+ year</div>
+                        <span class="text-gray-500">Graphics Designer</span>
+                    </div>
+                    <div class="bg-cyber-card/50 border border-cyber-border p-3 rounded">
+                        <div class="text-cyber-accent font-bold text-lg">7.49</div>
+                        <span class="text-gray-500">MCA CGPA</span>
+                    </div>
+                    <div class="bg-cyber-card/50 border border-cyber-border p-3 rounded">
+                        <div class="text-cyber-purple font-bold text-lg">7.69</div>
+                        <span class="text-gray-500">BCA CGPA</span>
+                    </div>
+                    <div class="bg-cyber-card/50 border border-cyber-border p-3 rounded">
+                        <div class="text-cyber-green font-bold text-lg">4+</div>
+                        <span class="text-gray-500">Internships</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#projects" class="px-6 py-3 rounded bg-gradient-to-r from-cyber-accent to-cyber-purple text-black font-extrabold hover:shadow-lg hover:shadow-cyber-accent/20 transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-folder-open mr-2"></i>View Projects_
+                    </a>
+                    <a href="#" class="px-6 py-3 rounded bg-gradient-to-r from-cyber-accent to-cyber-purple text-black font-extrabold hover:shadow-lg hover:shadow-cyber-accent/20 transition-all transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-folder-open mr-2"></i>Download CV_
+                    </a>
+                    <a href="#contact" class="px-6 py-3 rounded border border-cyber-border text-gray-300 font-semibold hover:border-cyber-accent hover:text-cyber-accent transition-all">
+                        Let's Talk_
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Live Terminal Panel -->
+            <div class="lg:col-span-5 w-full">
+                <div class="glass-card rounded-xl overflow-hidden border border-cyber-border shadow-2xl transition-all hover:neon-border-cyan duration-500">
+                    <div class="bg-[#141622] px-4 py-3 flex items-center justify-between border-b border-cyber-border">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
+                        </div>
+                        <div class="text-xs font-mono text-gray-500">terminal@anurag:~</div>
+                        <i class="fa-solid fa-circle-nodes text-cyber-accent text-sm animate-pulse"></i>
+                    </div>
+                    <!-- Live Console Output -->
+                    <div class="p-5 font-mono text-xs sm:text-sm h-80 overflow-y-auto space-y-4" id="consoleBody">
+                        <div class="text-gray-500">// Welcome! Type commands to interact. Try "help" or "skills"</div>
+                        <div class="flex gap-2">
+                            <span class="text-cyber-purple">visitor@anurag:~$</span>
+                            <span class="text-gray-100">cat system_status.log</span>
+                        </div>
+                        <div class="text-cyber-green">
+                            [OK] CPU: Healthy<br>
+                            [OK] Location: Satna, MP, India<br>
+                            [OK] DB Systems: Ready
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-cyber-purple">visitor@anurag:~$</span>
+                            <div class="flex-grow flex items-center">
+                                <input id="terminalInput" type="text" autocomplete="off" class="bg-transparent border-none outline-none text-cyber-accent w-full focus:ring-0 focus:outline-none" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ABOUT / ACADEMICS SECTION -->
+    <section id="about" class="py-24 relative z-10 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center space-x-4 mb-12">
+                <span class="font-mono text-cyber-accent text-xl">01.</span>
+                <h2 class="text-3xl font-extrabold text-white">Academic Milestones</h2>
+                <div class="flex-grow h-[1px] bg-cyber-border"></div>
+            </div>
+
+            <!-- Timeline style for academics -->
+            <div class="relative pl-6 sm:pl-10 border-l border-cyber-border space-y-12 ml-4">
+                
+                <!-- MCA -->
+                <div class="relative">
+                    <span class="absolute -left-[35px] sm:-left-[51px] top-1.5 w-6 h-6 rounded-full bg-cyber-black border-2 border-cyber-accent flex items-center justify-center">
+                        <i class="fa-solid fa-graduation-cap text-[10px] text-cyber-accent"></i>
+                    </span>
+                    <div class="glass-card p-6 rounded-lg border border-cyber-border hover:border-cyber-accent/50 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h3 class="text-xl font-bold text-white">Master of Computer Application (MCA)</h3>
+                            <span class="font-mono text-xs text-cyber-accent bg-cyber-accent/10 px-2 py-1 rounded">2022 - 2024</span>
+                        </div>
+                        <p class="text-gray-400 font-semibold">AKS University, Satna, Madhya Pradesh</p>
+                        <div class="mt-4 flex items-center gap-3 font-mono text-sm text-cyber-green">
+                            <span class="px-2.5 py-1 bg-cyber-green/5 rounded border border-cyber-green/20">Passed with 7.49 CGPA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BCA -->
+                <div class="relative">
+                    <span class="absolute -left-[35px] sm:-left-[51px] top-1.5 w-6 h-6 rounded-full bg-cyber-black border-2 border-cyber-purple flex items-center justify-center">
+                        <i class="fa-solid fa-code text-[10px] text-cyber-purple"></i>
+                    </span>
+                    <div class="glass-card p-6 rounded-lg border border-cyber-border hover:border-cyber-purple/50 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h3 class="text-xl font-bold text-white">Bachelor of Computer Application (BCA)</h3>
+                            <span class="font-mono text-xs text-cyber-purple bg-cyber-purple/10 px-2 py-1 rounded">2019 - 2022</span>
+                        </div>
+                        <p class="text-gray-400 font-semibold">AKS University, Satna, Madhya Pradesh</p>
+                        <div class="mt-4 flex items-center gap-3 font-mono text-sm text-cyber-green">
+                            <span class="px-2.5 py-1 bg-cyber-green/5 rounded border border-cyber-green/20">Passed with 7.69 CGPA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 12 -->
+                <div class="relative">
+                    <span class="absolute -left-[35px] sm:-left-[51px] top-1.5 w-6 h-6 rounded-full bg-cyber-black border-2 border-gray-600 flex items-center justify-center">
+                        <i class="fa-solid fa-circle text-[8px] text-gray-400"></i>
+                    </span>
+                    <div class="glass-card p-5 rounded-lg border border-cyber-border">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h4 class="text-lg font-bold text-white">Class 12th (Higher Secondary)</h4>
+                            <span class="font-mono text-xs text-gray-400">2018 - 2019</span>
+                        </div>
+                        <p class="text-gray-400 font-medium">Govt. H. S. School, Sohawal, Satna</p>
+                        <p class="text-sm font-mono text-gray-500 mt-2">Aggregated Score: 68.8%</p>
+                    </div>
+                </div>
+
+                <!-- Class 10 -->
+                <div class="relative">
+                    <span class="absolute -left-[35px] sm:-left-[51px] top-1.5 w-6 h-6 rounded-full bg-cyber-black border-2 border-gray-600 flex items-center justify-center">
+                        <i class="fa-solid fa-circle text-[8px] text-gray-400"></i>
+                    </span>
+                    <div class="glass-card p-5 rounded-lg border border-cyber-border">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <h4 class="text-lg font-bold text-white">Class 10th (High School)</h4>
+                            <span class="font-mono text-xs text-gray-400">2016 - 2017</span>
+                        </div>
+                        <p class="text-gray-400 font-medium">Amar Gyan Jyoti High School, Pateri Satna</p>
+                        <p class="text-sm font-mono text-gray-500 mt-2">Aggregated Score: 78.16%</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills" class="py-24 relative z-10 px-6 bg-gradient-to-b from-transparent via-[#090a12] to-transparent">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center space-x-4 mb-12">
+                <span class="font-mono text-cyber-accent text-xl">02.</span>
+                <h2 class="text-3xl font-extrabold text-white">Tech Stack Grid</h2>
+                <div class="flex-grow h-[1px] bg-cyber-border"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Programming -->
+                <div class="glass-card p-6 rounded-xl border border-cyber-border hover:neon-border-cyan transition-all duration-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-terminal text-2xl text-cyber-accent"></i>
+                        <h3 class="font-mono font-bold text-white text-lg">Languages</h3>
+                    </div>
+                    <div class="space-y-3">
+                        
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Java (Core OOP)</span><span>90%</span>
+                            </div>
+                            <div class="w-full bg-[#151722] h-1.5 rounded-full"><div class="bg-cyber-accent h-1.5 rounded-full" style="width: 90%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>Python (Django)</span><span>75%</span>
+                            </div>
+                            <div class="w-full bg-[#151722] h-1.5 rounded-full"><div class="bg-cyber-accent h-1.5 rounded-full" style="width: 75%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span>C Language</span><span>75%</span>
+                            </div>
+                            <div class="w-full bg-[#151722] h-1.5 rounded-full"><div class="bg-cyber-accent h-1.5 rounded-full" style="width: 75%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Web Dev -->
+                <div class="glass-card p-6 rounded-xl border border-cyber-border hover:neon-border-purple transition-all duration-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-code text-2xl text-cyber-purple"></i>
+                        <h3 class="font-mono font-bold text-white text-lg">Web Ecosystem</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple">HTML5 / CSS3</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple">JavaScript ES6</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple">Django Framework</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple">PHP Core</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-purple/10 border border-cyber-purple/30 text-cyber-purple">Bootstrap</span>
+                    </div>
+                </div>
+
+                <!-- Systems & SQL -->
+                <div class="glass-card p-6 rounded-xl border border-cyber-border hover:neon-border-cyan transition-all duration-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-server text-2xl text-cyber-accent"></i>
+                        <h3 class="font-mono font-bold text-white text-lg">Systems / DB</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent">Linux Admin</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent">RDBMS Concepts</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent">SQL Server</span>
+                        <span class="px-2.5 py-1 text-xs font-mono rounded bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent">Windows OS</span>
+                    </div>
+                </div>
+
+                <!-- Media & Creation -->
+                <div class="glass-card p-6 rounded-xl border border-cyber-border md:col-span-2 lg:col-span-3 hover:neon-border-purple transition-all duration-300">
+                    <h3 class="font-mono font-bold text-white text-lg mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-toolbox text-cyber-purple"></i> Utility Tool belt
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fab fa-git-alt text-2xl text-orange-500 mb-1"></i>
+                            <p class="text-xs font-mono">Git / GitHub</p>
+                        </div>
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fa-solid fa-laptop-code text-2xl text-blue-400 mb-1"></i>
+                            <p class="text-xs font-mono">VS Code</p>
+                        </div>
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fa-solid fa-image text-2xl text-cyan-400 mb-1"></i>
+                            <p class="text-xs font-mono">Photoshop</p>
+                        </div>
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fa-solid fa-clapperboard text-2xl text-red-500 mb-1"></i>
+                            <p class="text-xs font-mono">Premiere Pro</p>
+                        </div>
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fa-solid fa-pen-nib text-2xl text-teal-400 mb-1"></i>
+                            <p class="text-xs font-mono">Canva Design</p>
+                        </div>
+                        <div class="bg-cyber-black border border-cyber-border p-3 rounded-lg text-center hover:border-cyber-purple transition-all">
+                            <i class="fa-solid fa-briefcase text-2xl text-yellow-400 mb-1"></i>
+                            <p class="text-xs font-mono">Office Suite</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience" class="py-24 relative z-10 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center space-x-4 mb-12">
+                <span class="font-mono text-cyber-accent text-xl">03.</span>
+                <h2 class="text-3xl font-extrabold text-white">Experience log</h2>
+                <div class="flex-grow h-[1px] bg-cyber-border"></div>
+            </div>
+
+            <!-- Tab Layout for experience -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <!-- Tabs list -->
+                <div class="md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 font-mono text-sm border-b md:border-b-0 md:border-l border-cyber-border pb-4 md:pb-0">
+                    <button class="exp-tab-btn active px-4 py-3 text-left border-b-2 md:border-b-0 md:border-l-2 border-cyber-accent text-cyber-accent bg-[#151722]/50 whitespace-nowrap" onclick="switchTab(event, 'teaching')">
+                        AKS University
+                    </button>
+                    <button class="exp-tab-btn px-4 py-3 text-left border-b-2 md:border-b-0 md:border-l-2 border-transparent hover:text-white hover:bg-[#151722]/20 whitespace-nowrap" onclick="switchTab(event, 'shivaay')">
+                        Shivaay Prod.
+                    </button>
+                    <button class="exp-tab-btn px-4 py-3 text-left border-b-2 md:border-b-0 md:border-l-2 border-transparent hover:text-white hover:bg-[#151722]/20 whitespace-nowrap" onclick="switchTab(event, 'rostris')">
+                        Rostris Infotech
+                    </button>
+                    <button class="exp-tab-btn px-4 py-3 text-left border-b-2 md:border-b-0 md:border-l-2 border-transparent hover:text-white hover:bg-[#151722]/20 whitespace-nowrap" onclick="switchTab(event, 'infinity')">
+                        Infinity Verse
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="md:col-span-8">
+                    <!-- AKS -->
+                    <div id="teaching" class="exp-content space-y-4">
+                        <h3 class="text-2xl font-bold text-white">Teaching Associate <span class="text-cyber-accent">@ AKS University</span></h3>
+                        <p class="font-mono text-xs text-gray-500">Aug 2025 - Present | Satna, MP</p>
+                        <ul class="space-y-3 text-gray-400 text-sm list-inside list-none">
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Instructing undergraduate batches on fundamental programming paradigms (OOPs, Java, Python).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Mentoring capstone systems and guides in real-world responsive design practices.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Shivaay -->
+                    <div id="shivaay" class="exp-content hidden space-y-4">
+                        <h3 class="text-2xl font-bold text-white">Python Django Intern <span class="text-cyber-accent">@ Shivaay Productions</span></h3>
+                        <p class="font-mono text-xs text-gray-500">Jan 2024 - April 2024 | Internship</p>
+                        <ul class="space-y-3 text-gray-400 text-sm list-inside list-none">
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Constructed dynamic server structures and schemas using Python Django.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Integrated complex backend data structures and custom template configurations.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rostris -->
+                    <div id="rostris" class="exp-content hidden space-y-4">
+                        <h3 class="text-2xl font-bold text-white">RHCSA Intern <span class="text-cyber-accent">@ Rostris Infotech</span></h3>
+                        <p class="font-mono text-xs text-gray-500">Jan 2022 - April 2022 | System Admin Training</p>
+                        <ul class="space-y-3 text-gray-400 text-sm list-inside list-none">
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Configured secure file systems, virtual networks, and command structures on Red Hat Linux.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Administered operational protocols, user configurations, and automation scripts.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Infinity -->
+                    <div id="infinity" class="exp-content hidden space-y-4">
+                        <h3 class="text-2xl font-bold text-white">Web Development Intern <span class="text-cyber-accent">@ Infinity Verse</span></h3>
+                        <p class="font-mono text-xs text-gray-500">Mar 2021 - April 2021 | Front-End</p>
+                        <ul class="space-y-3 text-gray-400 text-sm list-inside list-none">
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Engineered responsive web panels and dynamic interface layers using standard JS stack.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-cyber-accent font-mono mt-1">▹</span>
+                                <span>Tested system interface scalability across multiple viewports for zero content overflows.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="py-24 relative z-10 px-6 bg-gradient-to-b from-transparent via-[#090a12] to-transparent">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center space-x-4 mb-12">
+                <span class="font-mono text-cyber-accent text-xl">04.</span>
+                <h2 class="text-3xl font-extrabold text-white">System Builds</h2>
+                <div class="flex-grow h-[1px] bg-cyber-border"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Project 1 (AWS News Web) -->
+                <div class="glass-card rounded-lg overflow-hidden border border-cyber-border hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <i class="fa-solid fa-newspaper text-3xl text-cyber-accent"></i>
+                            <div class="flex items-center gap-2 text-xs font-mono text-cyber-accent bg-cyber-accent/10 border border-cyber-accent/20 px-2 py-0.5 rounded">
+                                <i class="fab fa-aws"></i> AWS DEPLOYED
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyber-accent transition-colors">AWS Hosted News Portal</h3>
+                        <p class="text-gray-400 text-sm">Designed and configured a dynamic multi-user news application using Django, safely hosted on AWS servers for global delivery.</p>
+                    </div>
+                    <div class="p-6 pt-0 font-mono text-xs text-cyber-accent flex flex-wrap gap-2">
+                        <span>#Python</span> <span>#Django</span> <span>#AWS-EC2</span> <span>#SQL</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 (Amazon Clone) -->
+                <div class="glass-card rounded-lg overflow-hidden border border-cyber-border hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <i class="fa-solid fa-cart-flatbed text-3xl text-cyber-purple"></i>
+                            <div class="flex items-center gap-2 text-xs font-mono text-cyber-purple bg-cyber-purple/10 border border-cyber-purple/20 px-2 py-0.5 rounded">
+                                <i class="fa-solid fa-database"></i> DB CONNECTED
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyber-purple transition-colors">Amazon Web Clone</h3>
+                        <p class="text-gray-400 text-sm">A full functional e-commerce clone complete with product registries, shopping cart managers, session control, and user auth via core PHP.</p>
+                    </div>
+                    <div class="p-6 pt-0 font-mono text-xs text-cyber-purple flex flex-wrap gap-2">
+                        <span>#PHP-Core</span> <span>#RDBMS</span> <span>#Bootstrap</span> <span>#JS</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 (Linux Server Configurations) -->
+                <div class="glass-card rounded-lg overflow-hidden border border-cyber-border hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <i class="fa-solid fa-gears text-3xl text-cyber-green"></i>
+                            <span class="text-xs font-mono text-cyber-green bg-cyber-green/10 border border-cyber-green/20 px-2 py-0.5 rounded">INFRASTRUCTURE</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyber-green transition-colors">Linux Server Pipeline</h3>
+                        <p class="text-gray-400 text-sm">Automated configurations and testing protocols for Apache Tomcat, FTP protocols, and complex DNS structures across secure local Linux nodes.</p>
+                    </div>
+                    <div class="p-6 pt-0 font-mono text-xs text-cyber-green flex flex-wrap gap-2">
+                        <span>#Apache</span> <span>#DNS</span> <span>#FTP</span> <span>#LinuxShell</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACHIEVEMENTS & CERTIFICATIONS -->
+    <section class="py-24 relative z-10 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center space-x-4 mb-12">
+                <span class="font-mono text-cyber-accent text-xl">05.</span>
+                <h2 class="text-3xl font-extrabold text-white">Credentials Log</h2>
+                <div class="flex-grow h-[1px] bg-cyber-border"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                <!-- Card 1 -->
+                <div class="p-6 glass-card border border-cyber-border rounded-lg relative overflow-hidden group hover:border-cyber-accent transition-colors">
+                    <div class="absolute top-0 right-0 h-16 w-16 bg-cyber-accent/5 rounded-bl-full flex items-center justify-end p-3 text-lg text-cyber-accent">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <span class="text-cyber-accent text-lg font-bold mb-2 block">UDEMY</span>
+                    <h4 class="text-white text-sm font-bold mb-1">Developer Credentials</h4>
+                    <p class="text-gray-400 mb-4">Completed basic credentials and pipeline structures for programming fundamentals.</p>
+                    <ul class="space-y-1.5 text-gray-500">
+                        <li>• "Java for Beginners"</li>
+                        <li>• "Python for Beginners"</li>
+                        <li>• "Git for Beginners"</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-6 glass-card border border-cyber-border rounded-lg relative overflow-hidden group hover:border-cyber-purple transition-colors">
+                    <div class="absolute top-0 right-0 h-16 w-16 bg-cyber-purple/5 rounded-bl-full flex items-center justify-end p-3 text-lg text-cyber-purple">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <span class="text-cyber-purple text-lg font-bold mb-2 block">ALISON</span>
+                    <h4 class="text-white text-sm font-bold mb-1">Web Development</h4>
+                    <p class="text-gray-400 mb-4">Comprehensive certification encompassing fundamental responsive layout grids, DOM integrations, and standard style paradigms.</p>
+                    <p class="text-cyber-purple text-[10px]">Verified Core Dev Track</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-6 glass-card border border-cyber-border rounded-lg relative overflow-hidden group hover:border-cyber-accent transition-colors">
+                    <div class="absolute top-0 right-0 h-16 w-16 bg-cyber-accent/5 rounded-bl-full flex items-center justify-end p-3 text-lg text-cyber-accent">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <span class="text-cyber-accent text-lg font-bold mb-2 block">TCS iON</span>
+                    <h4 class="text-white text-sm font-bold mb-1">Professional Assets</h4>
+                    <p class="text-gray-400 mb-4 font-sans">Focusing on standard workspace integration patterns, corporate presentation methodologies, and optimal team configurations.</p>
+                    <ul class="space-y-1 text-gray-500">
+                        <li>• "Communication Skills"</li>
+                        <li>• "Presentation Skills"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-24 relative z-10 px-6 border-t border-cyber-border bg-[#05060a]">
+        <div class="max-w-xl mx-auto text-center">
+            <span class="font-mono text-cyber-accent text-sm mb-4 block">06. What's Next?</span>
+            <h2 class="text-4xl font-extrabold text-white mb-6">Initialize Connection</h2>
+            <p class="text-gray-400 mb-10 text-lg">
+                I am actively seeking junior/associate positions to apply my skills. Drop an email, dial me directly, or ping me on LinkedIn.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs mb-10">
+                <a href="mailto:vishwakarmaanurag370@gmail.com" class="p-4 bg-cyber-card border border-cyber-border rounded-lg hover:border-cyber-accent transition-all block">
+                    <i class="fa-regular fa-envelope text-xl text-cyber-accent mb-2"></i>
+                    <p class="text-gray-500">EMAIL</p>
+                    <!-- <span class="text-white font-bold block mt-1 break-all">anurag0@gmail.com</span> -->
+                </a>
+                <a href="https://github.com/Anurag-Vishwakarma" target="_blank" class="p-4 bg-cyber-card border border-cyber-border rounded-lg hover:border-cyber-purple transition-all block">
+                    <i class="fa-brands fa-github text-xl text-cyber-purple mb-2"></i>
+                    <p class="text-gray-500">GITHUB</p>
+                    <!-- <span class="text-white font-bold block mt-1">+91 7896541230</span> -->
+                </a>
+                <a href="https://www.linkedin.com/in/anurag-vishwakarma-418631223/" target="_blank" class="p-4 bg-cyber-card border border-cyber-border rounded-lg hover:border-cyber-accent transition-all block">
+                    <i class="fab fa-linkedin-in text-xl text-cyber-accent mb-2"></i>
+                    <p class="text-gray-500">LINKEDIN</p>
+                    <!-- <span class="text-white font-bold block mt-1">Anurag Vishwakarma</span> -->
+                </a>
+            </div>
+
+            <!-- Light Matrix Style Ping Form -->
+            <form action="vishwakarmaanurag370@gmail.com" method="post" enctype="text/plain" class="space-y-4 text-left">
+                <input type="text" name="name" required placeholder="name.usr" class="w-full bg-[#12131e] border border-cyber-border rounded p-3 text-white focus:outline-none focus:border-cyber-accent transition-all font-mono text-sm">
+                <textarea name="message" required rows="4" placeholder="payload.log // write your message here" class="w-full bg-[#12131e] border border-cyber-border rounded p-3 text-white focus:outline-none focus:border-cyber-accent transition-all font-mono text-sm"></textarea>
+                <button type="submit" class="w-full py-3.5 rounded bg-gradient-to-r from-cyber-accent to-cyber-purple text-black font-extrabold hover:shadow-lg hover:shadow-cyber-accent/25 transition-all font-mono text-sm">
+                    ping --send --payload
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 text-center text-xs text-gray-600 border-t border-[#131522] font-mono relative z-10">
+        <p> © 2026 Anurag Vishwakarma. All Rights Reserved.</p>
+        <p class="text-[10px] text-gray-700 mt-1">Satna, Madhya Pradesh © 2026</p>
+    </footer>
+
+    <script>
+        // Nav Toggle
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        navToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Tab switcher for Experience
+        function switchTab(evt, tabId) {
+            const expContents = document.getElementsByClassName('exp-content');
+            for (let i = 0; i < expContents.length; i++) {
+                expContents[i].classList.add('hidden');
+            }
+            
+            const expButtons = document.getElementsByClassName('exp-tab-btn');
+            for (let i = 0; i < expButtons.length; i++) {
+                expButtons[i].classList.remove('active', 'border-cyber-accent', 'text-cyber-accent', 'bg-[#151722]/50');
+                expButtons[i].classList.add('border-transparent');
+            }
+
+            document.getElementById(tabId).classList.remove('hidden');
+            evt.currentTarget.classList.add('active', 'border-cyber-accent', 'text-cyber-accent', 'bg-[#151722]/50');
+            evt.currentTarget.classList.remove('border-transparent');
+        }
+
+        // Live interactive terminal
+        const terminalInput = document.getElementById('terminalInput');
+        const consoleBody = document.getElementById('consoleBody');
+
+        terminalInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = this.value.trim().toLowerCase();
+                this.value = '';
+
+                // Create user output node
+                const userLine = document.createElement('div');
+                userLine.className = 'flex gap-2';
+                userLine.innerHTML = `<span class="text-cyber-purple">visitor@anurag:~$</span> <span class="text-gray-100">${command}</span>`;
+                consoleBody.insertBefore(userLine, terminalInput.parentNode.parentNode);
+
+                // Process output
+                const responseLine = document.createElement('div');
+                responseLine.className = 'text-gray-300 pl-4 py-1 border-l-2 border-cyber-accent font-mono text-xs';
+
+                if (command === 'help') {
+                    responseLine.innerHTML = `
+                        Available commands:<br>
+                        - <span class="text-cyber-accent">about</span>: Brief summary of Anurag<br>
+                        - <span class="text-cyber-accent">skills</span>: Log full core skill list<br>
+                        - <span class="text-cyber-accent">projects</span>: Print live systems built<br>
+                        - <span class="text-cyber-accent">clear</span>: Flush console buffer
+                    `;
+                } else if (command === 'about') {
+                    responseLine.innerHTML = `Anurag Vishwakarma: Post-grad in MCA from AKS University (Passed with 7.49 CGPA). Aspires to engineer robust web environments and server configurations. Located in Satna, MP.`;
+                } else if (command === 'skills') {
+                    responseLine.innerHTML = `
+                        Python, Java, C, PHP, Django, JavaScript, Linux Server Adm, SQL, Git/GitHub.
+                    `;
+                } else if (command === 'projects') {
+                    responseLine.innerHTML = `
+                        1. AWS News Web (Django + EC2)<br>
+                        2. Amazon Clone (PHP + Bootstrap)<br>
+                        3. Linux Server Pipelines (Tomcat/DNS/FTP configs)
+                    `;
+                } else if (command === 'clear') {
+                    // Remove nodes except welcome & input container
+                    consoleBody.innerHTML = `
+                        <div class="text-gray-500">// Terminal memory flushed. Type commands to check details.</div>
+                        <div class="flex gap-2">
+                            <span class="text-cyber-purple">visitor@anurag:~$</span>
+                            <div class="flex-grow flex items-center">
+                                <input id="terminalInput" type="text" autocomplete="off" class="bg-transparent border-none outline-none text-cyber-accent w-full focus:ring-0 focus:outline-none">
+                            </div>
+                        </div>
+                    `;
+                    // Rebind key handler
+                    bindTerminalInput();
+                    return;
+                } else {
+                    responseLine.innerHTML = `sh: command not found: ${command}. Try <span class="text-cyber-accent">"help"</span> for a list of available pipelines.`;
+                }
+
+                consoleBody.insertBefore(responseLine, terminalInput.parentNode.parentNode);
+                consoleBody.scrollTop = consoleBody.scrollHeight;
+            }
+        });
+
+        function bindTerminalInput() {
+            const newInput = document.getElementById('terminalInput');
+            newInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    // Handle the exact same logic
+                    const eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
+                    terminalInput.value = this.value;
+                    terminalInput.dispatchEvent(eventEnter);
+                    this.value = '';
+                }
+            });
+        }
+
+        // Animated matrix digital canvas background
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const alphabets = "01";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const rainDrops = [];
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        const drawMatrix = () => {
+            ctx.fillStyle = 'rgba(8, 8, 16, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0'; // green text
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabets.charAt(Math.floor(Math.random() * alphabets.length));
+                // Alternate matrix color to accent/purple slightly
+                if (Math.random() > 0.8) {
+                    ctx.fillStyle = '#00f2fe';
+                } else if (Math.random() > 0.9) {
+                    ctx.fillStyle = '#9d4edd';
+                } else {
+                    ctx.fillStyle = '#10b981';
+                }
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+
+        setInterval(drawMatrix, 45);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Simple Typewriter-Style Role Cycle on Hero
+        const roles = [
+            "Python Django Web Developer",
+            "Master of Computer Application (MCA)",
+            "RHCSA Linux Administrator Intern",
+           // "Backend Architect & Creator"
+        ];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const speed = 100;
+        const targetElement = document.getElementById('terminalRole');
+
+        function typeRole() {
+            const currentRole = roles[roleIndex];
+            if (isDeleting) {
+                targetElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                targetElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                isDeleting = true;
+                setTimeout(typeRole, 2000); // Wait before delete
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(typeRole, 500); // Wait before next role
+            } else {
+                setTimeout(typeRole, isDeleting ? 40 : speed);
+            }
+        }
+        typeRole();
+
+    </script>
+</body>
+</html>
